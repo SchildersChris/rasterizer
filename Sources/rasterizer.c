@@ -15,7 +15,7 @@
 /*
  * The nearest value for clipping the view frustum
  */
-#define NEAR_CLIPPING .5
+#define NEAR_CLIPPING .5f
 
 /**
  * This functions translates a camera coordinate to raster space.
