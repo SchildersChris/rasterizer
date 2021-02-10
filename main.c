@@ -45,8 +45,8 @@ int main() {
     };
 
     // Raster image dimensions
-    int width = 100;
-    int height = 100;
+    int width = 120;
+    int height = 50;
 
     // Allocate z-buffer on heap
     size_t zBuffSize = width * height * sizeof(float);

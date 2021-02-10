@@ -37,7 +37,7 @@ static Vector3 cameraToRaster(Vector3* v, int w, int h) {
     return (Vector3) {
         .x = (1 + s.x) * 0.5f * (float)w,
         .y = (1 + s.y) * 0.5f * (float)h,
-        .z = 1 / (-v->z)
+        .z = 1 / v->z
     };
 }
 
