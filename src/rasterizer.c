@@ -25,7 +25,7 @@ static Vector3 cameraToRaster(Vector3* v, int w, int h) {
     return (Vector3) {
         .x = (1 + s.x) * 0.5f * (float)w,
         .y = (1 + s.y) * 0.5f * (float)h,
-        .z = 1 / v->z
+        .z = 1 / (-v->z)
     };
 }
 
@@ -46,7 +46,7 @@ static unsigned char getPixelShade(float z, Vector3 c[3], const float a[3]) {
     float px = (c[0].x / c[0].z) * a[0] + (c[1].x / c[1].z) * a[1] + (c[2].x / c[2].z) * a[2];
     float py = (c[0].y / c[0].z) * a[0] + (c[1].y / c[1].z) * a[1] + (c[2].y / c[2].z) * a[2];
 
-    Vector3 invertedView = {px * z, py * z, z };
+    Vector3 invertedView = {px * z, py * z, -z };
 
     Vector3 line1 = subVec3(&c[0], &c[1]);
     Vector3 line2 = subVec3(&c[0], &c[2]);
@@ -150,20 +150,19 @@ static void rasterizeTriangle(
 
 void rasterize(
         const Vector3* vertices,
-        const int* indices,
-        int numTriangles,
+        const unsigned int* indices,
+        unsigned int numTriangles,
         float* zBuffer,
         int rasterWidth,
         int rasterHeight,
         unsigned char* rasterImage) {
 
-    int indicesLen = numTriangles * 3;
-
-    for (int i = 0; i < indicesLen; i+=3) {
+    unsigned int indicesLen = numTriangles * 3 * 3;
+    for (int i = 0; i < indicesLen; i+=9) {
         Vector3 c[3] = {
             vertices[indices[i]-1],
-            vertices[indices[i+1]-1],
-            vertices[indices[i+2]-1]
+            vertices[indices[i+3]-1],
+            vertices[indices[i+6]-1]
         };
 
         Vector3 r[3] = {
