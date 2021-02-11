@@ -136,14 +136,9 @@ static void rasterizeTriangle(
             float z = 1 / (r[0].z * a[0] + r[1].z * a[1] + r[2].z * a[2]);
             if (z >= zBuffer[y * rasterWidth + x])
                 continue;
+
             zBuffer[y * rasterWidth + x] = z;
-
-            unsigned char shade = getPixelShade(z, c, a);
-            int idx = y * rasterWidth + x;
-
-            rasterImage[idx] = shade;
-            rasterImage[idx+1] = shade;
-            rasterImage[idx+2] = shade;
+            rasterImage[y * rasterWidth + x] = getPixelShade(z, c, a);
         }
     }
 }

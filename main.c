@@ -83,7 +83,6 @@ int main() {
     // Raster image dimensions
     int width = 5000;
     int height = 5000;
-    int channels = 3;
 
     // Allocate z-buffer on heap
     size_t zBuffSize = width * height * sizeof(float);
@@ -91,7 +90,7 @@ int main() {
     memset(zBuffer, CHAR_MAX, zBuffSize);
 
     // Allocate raster image on heap
-    size_t rasterImageSize = width * height * channels * sizeof(unsigned char);
+    size_t rasterImageSize = width * height * sizeof(unsigned char);
     unsigned char* rasterImage = malloc(rasterImageSize);
     memset(rasterImage, 0, rasterImageSize);
 
