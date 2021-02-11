@@ -7,6 +7,13 @@
 
 #include "utils.h"
 
+/*
+ * The nearest value for clipping the view frustum
+ */
+#ifndef NEAR_CLIPPING
+    #define NEAR_CLIPPING .5f
+#endif
+
 /**
  * Rasterize a list of triangles into a raster image buffer
  * based on the defined width and height

@@ -5,6 +5,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
+#define NEAR_CLIPPING .5f
 #include "src/rasterizer.h"
 
 
@@ -56,6 +57,6 @@ int main() {
     rasterize(vertices, indices, 12, zBuffer, width, height, rasterImage);
 
     // Write out result
-    stbi_write_jpg("./output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));
+    stbi_write_jpg("../output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));
     return 0;
 }
