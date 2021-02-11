@@ -4,7 +4,7 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include "utils.h"
+#include "include/utils.h"
 
 Vector3 subVec3(Vector3* v1, Vector3* v2) {
     return (Vector3){

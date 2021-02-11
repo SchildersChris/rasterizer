@@ -7,7 +7,7 @@
 #include <stb_image_write.h>
 
 #define NEAR_CLIPPING 1
-#include "src/rasterizer.h"
+#include "src/include/rasterizer.h"
 
 void* openFile(const char* p_file_name, size_t* p_file_size)
 {

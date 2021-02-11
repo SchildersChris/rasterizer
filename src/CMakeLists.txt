@@ -2,11 +2,11 @@
 # src module
 # -----------------------------------------------------------------------------
 
-add_library(rasterizer SHARED
+add_library(rasterizer
         rasterizer.c
-        rasterizer.h
+        include/rasterizer.h
         utils.c
-        utils.h)
+        include/utils.h)
 
 # Linking <math.h> library
 target_link_libraries(rasterizer m)

@@ -3,7 +3,7 @@
 //
 
 #include <math.h>
-#include "rasterizer.h"
+#include "include/rasterizer.h"
 
 /**
  * This functions translates a camera coordinate to raster space.

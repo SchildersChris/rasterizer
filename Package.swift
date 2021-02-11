@@ -9,7 +9,8 @@ let package = Package(
     targets: [
         .target(
             name: "Rasterizer",
-            path: "./src"
+            path: "./src",
+            exclude: ["CMakeLists.txt"]
         )
     ]
 )
