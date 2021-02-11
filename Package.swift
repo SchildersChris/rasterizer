@@ -4,11 +4,11 @@ import PackageDescription
 let package = Package(
     name: "Rasterizer",
     products: [
-        .library(name: "rasterizer", targets: ["rasterizer"])
+        .library(name: "Rasterizer", targets: ["Rasterizer"])
     ],
     targets: [
         .target(
-            name: "rasterizer",
+            name: "Rasterizer",
             path: "./Sources/"
         )
     ]
