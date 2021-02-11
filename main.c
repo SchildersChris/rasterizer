@@ -1,19 +1,12 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <memory.h>
 #include <limits.h>
 
-#include "Sources/rasterizer.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include <stb_image_write.h>
 
-static void draw(int width, int height, char* frame) {
-    printf("\x1b[%dA", height);
-    size_t size = sizeof(char);
+#include "src/rasterizer.h"
 
-    for(int y = 0; y < height; y++) {
-        fwrite(frame + size * y * width, size, width, stdout);
-        printf("%c", '\n');
-    }
-}
 
 int main() {
     // Cube vertices
@@ -45,8 +38,9 @@ int main() {
     };
 
     // Raster image dimensions
-    int width = 120;
-    int height = 50;
+    int width = 600;
+    int height = 600;
+    int channels = 3;
 
     // Allocate z-buffer on heap
     size_t zBuffSize = width * height * sizeof(float);
@@ -54,14 +48,14 @@ int main() {
     memset(zBuffer, CHAR_MAX, zBuffSize);
 
     // Allocate raster image on heap
-    size_t rasterImageSize = width * height * sizeof(char);
-    char* rasterImage = malloc(rasterImageSize);
-    memset(rasterImage, ' ', rasterImageSize);
+    size_t rasterImageSize = width * height * channels * sizeof(unsigned char);
+    unsigned char* rasterImage = malloc(rasterImageSize);
+    memset(rasterImage, 0, rasterImageSize);
 
     // Rasterize triangles
     rasterize(vertices, indices, 12, zBuffer, width, height, rasterImage);
 
-    // Draw raster image
-    draw(width, height, rasterImage);
+    // Write out result
+    stbi_write_jpg("./output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));
     return 0;
 }
