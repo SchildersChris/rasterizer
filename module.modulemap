@@ -1,0 +1,5 @@
+module Rasterizer {
+    header "src/include/rasterizer.h"
+    link "Rasterizer"
+    export *
+}
