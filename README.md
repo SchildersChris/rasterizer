@@ -1,3 +1,3 @@
-# Rasterizer-lib
+# Rasterizer
 
 Simple C rasterizer library
