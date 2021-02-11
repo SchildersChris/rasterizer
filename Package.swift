@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "rasterizer",
+    name: "Rasterizer",
     products: [
         .library(name: "rasterizer", targets: ["rasterizer"])
     ],
