@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "include/utils.h"
 
-Vector3 subVec3(Vector3* v1, Vector3* v2) {
+Vector3 subVec3(const Vector3* v1, const Vector3* v2) {
     return (Vector3){
         .x = v1->x - v2->x,
         .y = v1->y - v2->y,
@@ -14,15 +14,15 @@ Vector3 subVec3(Vector3* v1, Vector3* v2) {
     };
 }
 
-float dotVec3(Vector3* v1, Vector3* v2) {
+float dotVec3(const Vector3* v1, const Vector3* v2) {
     return v1->x * v2->x + v1->y * v2->y + v1->z * v2->z;
 }
 
-float lenVec3(Vector3* this) {
-    return sqrtf(this->x * this->x + this->y * this->y + this->z * this->z);
+float lenVec3(const Vector3* v) {
+    return sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
 }
 
-Vector3 normalizeVec3(Vector3* this) {
+Vector3 normalizeVec3(const Vector3* this) {
     float l = lenVec3(this);
     if (l <= 0)
         exit(-1);
@@ -35,7 +35,7 @@ Vector3 normalizeVec3(Vector3* this) {
     };
 }
 
-Vector3 crossVec3(Vector3* v1, Vector3* v2) {
+Vector3 crossVec3(const Vector3* v1, const Vector3* v2) {
     return (Vector3) {
         .x = v1->y * v2->z - v1->z * v2->y,
         .y = v1->z * v2->x - v1->x * v2->z,
@@ -43,6 +43,14 @@ Vector3 crossVec3(Vector3* v1, Vector3* v2) {
     };
 }
 
-float edgeFunction(Vector3* v1, Vector3* v2, Vector3* p) {
+float edgeFunction(const Vector3* v1, const Vector3* v2, const Vector3* p) {
     return (p->x - v1->x) * (v2->y - v1->y) - (p->y - v1->y) * (v2->x - v1->x);
+}
+
+Vector3 transformVec3(const Vector3 *v, const Matrix4x4 *mat) {
+    return (Vector3) {
+        .x = mat->p1.x * v->x + mat->p2.x * v->y + mat->p3.x * v->z + mat->p4.x,
+        .y = mat->p1.y * v->x + mat->p2.y * v->y + mat->p3.y * v->z + mat->p4.y,
+        .z = mat->p1.z * v->x + mat->p2.z * v->y + mat->p3.z * v->z + mat->p4.z
+    };
 }

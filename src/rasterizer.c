@@ -3,7 +3,12 @@
 //
 
 #include <math.h>
+#include <memory.h>
+#include <limits.h>
 #include "include/rasterizer.h"
+
+#define MM_IN_INCH 25.4f
+#define FOCAL_LENGTH 200
 
 /**
  * This functions translates a camera coordinate to raster space.
@@ -20,12 +25,11 @@
  * @return Returns a vector3 defined in raster space coordinate. The actual coordinate is a Vector2 but the inverted z component is added
  *         to later be used in rasterisation depth.
  */
-static Vector3 cameraToRaster(Vector3* v, int w, int h) {
-    Vector2 s = { NEAR_CLIPPING * v->x / -v->z, NEAR_CLIPPING * v->y / -v->z };
+static Vector3 cameraToRaster(Vector3* v, unsigned int w, unsigned int h){
     return (Vector3) {
-        .x = (1 + s.x) * 0.5f * (float)w,
-        .y = (1 + s.y) * 0.5f * (float)h,
-        .z = 1 / (-v->z)
+        .x = (1 - NEAR_CLIPPING * v->x / (-v->z)) * 0.5f * (float)w,
+        .y = (1 - NEAR_CLIPPING * v->y / (-v->z)) * 0.5f * (float)h,
+        .z = 1 / -v->z
     };
 }
 
@@ -73,11 +77,11 @@ static void rasterizeTriangle(
         Vector3 c[3],
         Vector3 r[3],
         float* zBuffer,
-        int rasterWidth,
-        int rasterHeight,
+        unsigned int rasterWidth,
+        unsigned int rasterHeight,
         unsigned char* rasterImage) {
-    int w = rasterWidth - 1;
-    int h = rasterHeight - 1;
+    unsigned int w = rasterWidth - 1;
+    unsigned int h = rasterHeight - 1;
 
     // Calculate triangle bounding box (based on triangle in raster space)
     float rMaxY = MAX3(r[0].y, r[1].y, r[2].y);
@@ -103,7 +107,7 @@ static void rasterizeTriangle(
 
     for (int y = minY; y <= maxY; ++y) {
         for (int x = minX; x <= maxX; ++x) {
-            Vector3 p = { (float)x + 0.5f, (float)y, 0 };
+            Vector3 p = { (float)x, (float)y, 0 };
 
             // Area of each point in the triangle
             float a[3] = {
@@ -147,17 +151,22 @@ void rasterize(
         const Vector3* vertices,
         const unsigned int* indices,
         unsigned int numTriangles,
+        const Matrix4x4* transform,
         float* zBuffer,
-        int rasterWidth,
-        int rasterHeight,
+        unsigned int rasterWidth,
+        unsigned int rasterHeight,
         unsigned char* rasterImage) {
+
+    unsigned int size = rasterWidth * rasterHeight;
+    memset(rasterImage, 0, size * sizeof(unsigned char));
+    memset(zBuffer, CHAR_MAX, size * sizeof(float));
 
     unsigned int indicesLen = numTriangles * 3 * 3;
     for (int i = 0; i < indicesLen; i+=9) {
         Vector3 c[3] = {
-            vertices[indices[i]-1],
-            vertices[indices[i+3]-1],
-            vertices[indices[i+6]-1]
+            transformVec3(vertices + (indices[i]-1), transform),
+            transformVec3(vertices + (indices[i+3]-1), transform),
+            transformVec3(vertices + (indices[i+6]-1), transform)
         };
 
         Vector3 r[3] = {

@@ -11,7 +11,16 @@
  * The nearest value for clipping the view frustum
  */
 #ifndef NEAR_CLIPPING
-    #define NEAR_CLIPPING .5f
+    #define NEAR_CLIPPING 1
+#endif
+
+
+#ifndef ASPECT_WIDTH
+    #define ASPECT_WIDTH 16
+#endif
+
+#ifndef ASPECT_HEIGHT
+    #define ASPECT_HEIGHT 9
 #endif
 
 /**
@@ -30,9 +39,10 @@ void rasterize(
         const Vector3* vertices,
         const unsigned int* indices,
         unsigned int numIndices,
+        const Matrix4x4* transform,
         float* zBuffer,
-        int rasterWidth,
-        int rasterHeight,
+        unsigned int rasterWidth,
+        unsigned int rasterHeight,
         unsigned char* rasterImage);
 
 #endif //RASTERIZER_RASTERIZER_H

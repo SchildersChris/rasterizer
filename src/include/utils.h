@@ -15,6 +15,17 @@ typedef struct { float x, y; } Vector2;
  */
 typedef struct { float x, y, z; } Vector3;
 
+
+/**
+ * Vector with x, y, z and w components
+ */
+typedef struct { float x, y, z, w; } Vector4;
+
+/**
+ * Four by four matrix
+ */
+typedef struct { Vector4 p1, p2, p3, p4; } Matrix4x4;
+
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
@@ -28,7 +39,7 @@ typedef struct { float x, y, z; } Vector3;
  * @param v2 Vector2
  * @return Result vector
  */
-Vector3 subVec3(Vector3* v1, Vector3* v2);
+Vector3 subVec3(const Vector3* v1, const Vector3* v2);
 
 /**
  * Calculate the dot product two vectors
@@ -37,7 +48,7 @@ Vector3 subVec3(Vector3* v1, Vector3* v2);
  * @param v2 Vector2
  * @return Dot product
  */
-float dotVec3(Vector3* v1, Vector3* v2);
+float dotVec3(const Vector3* v1, const Vector3* v2);
 
 /**
  * Normalize the vector using the length of a vector
@@ -45,7 +56,7 @@ float dotVec3(Vector3* v1, Vector3* v2);
  * @param v Vector to normalize
  * @return Normalized vector
  */
-Vector3 normalizeVec3(Vector3* v);
+Vector3 normalizeVec3(const Vector3* v);
 
 /**
  * Calculate the cross product of two vectors
@@ -54,7 +65,16 @@ Vector3 normalizeVec3(Vector3* v);
  * @param v2 Vector2
  * @return Vector cross product
  */
-Vector3 crossVec3(Vector3* v1, Vector3* v2);
+Vector3 crossVec3(const Vector3* v1, const Vector3* v2);
+
+/**
+ * Transform vector3 using a transformation matrix
+ *
+ * @param v Vector to transform
+ * @param mat Transformation matrix
+ * @return Transformed vector
+ */
+Vector3 transformVec3(const Vector3* v, const Matrix4x4* mat);
 
 /**
  * This functions is used to determine weather a point is
@@ -70,7 +90,6 @@ Vector3 crossVec3(Vector3* v1, Vector3* v2);
  *         If the value < 0, the value is on the left of the line.
  *         Otherwise the value is on the right of the line.
  */
-float edgeFunction(Vector3* v1, Vector3* v2, Vector3* p);
-
+float edgeFunction(const Vector3* v1, const Vector3* v2, const Vector3* p);
 
 #endif //RASTERIZER_UTILS_H

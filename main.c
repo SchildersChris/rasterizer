@@ -1,6 +1,5 @@
 #include <stdlib.h>
 #include <memory.h>
-#include <limits.h>
 #include <objpar.h>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -39,7 +38,7 @@ void* openFile(const char* p_file_name, size_t* p_file_size)
 }
 
 int main() {
-//    // Cube vertices
+    // Cube vertices
 //    const Vector3 vertices[] =  {
 //        {-0.5f, -0.5f, -0.5f},
 //        {0.5f, -0.5f, -0.5f},
@@ -72,7 +71,7 @@ int main() {
     size_t file_size;
     objpar_data_t obj_data;
 
-    p_data = openFile("../res/vector.obj", &file_size);
+    p_data = openFile("../res/v2.obj", &file_size);
     p_buffer = malloc(objpar_get_size(p_data, file_size));
     objpar((const char*)p_data, file_size, p_buffer, &obj_data);
     free(p_data);
@@ -81,21 +80,25 @@ int main() {
     printf("Face Count: %u\n\n", obj_data.face_count);
 
     // Raster image dimensions
-    int width = 5000;
-    int height = 5000;
+    int width = 2000;
+    int height = 2000;
 
     // Allocate z-buffer on heap
-    size_t zBuffSize = width * height * sizeof(float);
-    float* zBuffer = malloc(zBuffSize);
-    memset(zBuffer, CHAR_MAX, zBuffSize);
+    float* zBuffer = malloc( width * height * sizeof(float));
 
     // Allocate raster image on heap
-    size_t rasterImageSize = width * height * sizeof(unsigned char);
-    unsigned char* rasterImage = malloc(rasterImageSize);
-    memset(rasterImage, 0, rasterImageSize);
+    unsigned char* rasterImage = malloc(width * height * sizeof(unsigned char));
+
+    float angle = 0.1f;
+    Matrix4x4 transform = {
+        { cosf(angle), -sinf(angle), 0, 0 },
+        { sinf(angle), cosf(angle), 0, 0 },
+        { 0, 0, 1, 0 },
+        { 0, 0, 0, 1 }
+    };
 
     // Rasterize triangles
-    rasterize((Vector3*)obj_data.p_positions, obj_data.p_faces, obj_data.face_count, zBuffer, width, height, rasterImage);
+    rasterize((Vector3*)obj_data.p_positions, obj_data.p_faces, obj_data.face_count, &transform, zBuffer, width, height, rasterImage);
 
     // Write out result
     stbi_write_jpg("../output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));
