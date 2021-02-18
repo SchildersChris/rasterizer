@@ -39,46 +39,46 @@ void* openFile(const char* p_file_name, size_t* p_file_size)
 
 int main() {
     // Cube vertices
-//    const Vector3 vertices[] =  {
-//        {-0.5f, -0.5f, -0.5f},
-//        {0.5f, -0.5f, -0.5f},
-//        {-0.5f, 0.5f,-0.5f},
-//        {0.5f, 0.5f, -0.5f},
-//        {-0.5f, 0.5f, -1.5f},
-//        {0.5f, 0.5f, -1.5f},
-//        {-0.5f, -0.5f, -1.5f},
-//        {0.5f, -0.5f, -1.5f},
-//    };
+    const Vector3 vertices[] =  {
+        {-0.5f, -0.5f, -0.5f},
+        {0.5f, -0.5f, -0.5f},
+        {-0.5f, 0.5f,-0.5f},
+        {0.5f, 0.5f, -0.5f},
+        {-0.5f, 0.5f, -1.5f},
+        {0.5f, 0.5f, -1.5f},
+        {-0.5f, -0.5f, -1.5f},
+        {0.5f, -0.5f, -1.5f},
+    };
+
+    // Cube triangle indices
+    const unsigned int indices[] = {
+        1, 2, 3,
+        3, 2, 4,
+        3, 4, 5,
+        5, 4, 6,
+        5, 6, 7,
+        7, 6, 8,
+        7, 8, 1,
+        1, 8, 2,
+        2, 8, 4,
+        4, 8, 6,
+        7, 1, 5,
+        5, 1, 3
+    };
 //
-//    // Cube triangle indices
-//    const unsigned int indices[] = {
-//        1,0,0, 2,0,0, 3,0,0,
-//        3,0,0, 2,0,0, 4,0,0,
-//        3,0,0, 4,0,0, 5,0,0,
-//        5,0,0, 4,0,0, 6,0,0,
-//        5,0,0, 6,0,0, 7,0,0,
-//        7,0,0, 6,0,0, 8,0,0,
-//        7,0,0, 8,0,0, 1,0,0,
-//        1,0,0, 8,0,0, 2,0,0,
-//        2,0,0, 8,0,0, 4,0,0,
-//        4,0,0, 8,0,0, 6,0,0,
-//        7,0,0, 1,0,0, 5,0,0,
-//        5,0,0, 1,0,0, 3,0,0
-//    };
-
-    void* p_data;
-    void* p_buffer;
-    size_t file_size;
-    objpar_data_t obj_data;
-
-    p_data = openFile("../res/v2.obj", &file_size);
-    p_buffer = malloc(objpar_get_size(p_data, file_size));
-    objpar((const char*)p_data, file_size, p_buffer, &obj_data);
-    free(p_data);
-
-    printf("Vertices Count: %u\n", obj_data.position_count);
-    printf("Face Count: %u\n\n", obj_data.face_count);
-
+//    void* p_data;
+//    void* p_buffer;
+//    size_t file_size;
+//    objpar_data_t obj_data;
+//
+//    p_data = openFile("../res/v2.obj", &file_size);
+//    p_buffer = malloc(objpar_get_size(p_data, file_size));
+//    objpar((const char*)p_data, file_size, p_buffer, &obj_data);
+//    free(p_data);
+//
+//    printf("Vertices Count: %u\n", obj_data.position_count);
+//    printf("Face Count: %u\n\n", obj_data.face_count);
+//
     // Raster image dimensions
     int width = 2000;
     int height = 2000;
@@ -97,8 +97,9 @@ int main() {
         { 0, 0, 0, 1 }
     };
 
-    // Rasterize triangles
-    rasterize((Vector3*)obj_data.p_positions, obj_data.p_faces, obj_data.face_count, &transform, zBuffer, width, height, rasterImage);
+//    // Rasterize triangles
+//    rasterize((Vector3*)obj_data.p_positions, obj_data.p_faces, obj_data.face_count, &transform, zBuffer, width, height, rasterImage);
+    rasterize(vertices, indices, 12, &transform, zBuffer, width, height, rasterImage);
 
     // Write out result
     stbi_write_jpg("../output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));

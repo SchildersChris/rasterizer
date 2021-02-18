@@ -150,7 +150,7 @@ static void rasterizeTriangle(
 void rasterize(
         const Vector3* vertices,
         const unsigned int* indices,
-        unsigned int numTriangles,
+        unsigned int numIndices,
         const Matrix4x4* transform,
         float* zBuffer,
         unsigned int rasterWidth,
@@ -161,12 +161,11 @@ void rasterize(
     memset(rasterImage, 0, size * sizeof(unsigned char));
     memset(zBuffer, CHAR_MAX, size * sizeof(float));
 
-    unsigned int indicesLen = numTriangles * 3 * 3;
-    for (int i = 0; i < indicesLen; i+=9) {
+    for (int i = 0; i < numIndices; i+=3) {
         Vector3 c[3] = {
             transformVec3(vertices + (indices[i]-1), transform),
-            transformVec3(vertices + (indices[i+3]-1), transform),
-            transformVec3(vertices + (indices[i+6]-1), transform)
+            transformVec3(vertices + (indices[i+1]-1), transform),
+            transformVec3(vertices + (indices[i+2]-1), transform)
         };
 
         Vector3 r[3] = {
