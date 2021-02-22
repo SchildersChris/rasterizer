@@ -7,9 +7,6 @@
 #include <limits.h>
 #include "include/rasterizer.h"
 
-#define MM_IN_INCH 25.4f
-#define FOCAL_LENGTH 200
-
 /**
  * This functions translates a camera coordinate to raster space.
  *

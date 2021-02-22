@@ -14,15 +14,6 @@
     #define NEAR_CLIPPING 1
 #endif
 
-
-#ifndef ASPECT_WIDTH
-    #define ASPECT_WIDTH 16
-#endif
-
-#ifndef ASPECT_HEIGHT
-    #define ASPECT_HEIGHT 9
-#endif
-
 /**
  * Rasterize a list of triangles into a raster image buffer
  * based on the defined width and height
