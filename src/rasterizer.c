@@ -44,10 +44,10 @@ static unsigned char getPixelShade(float z, Vector3 c[3], const float a[3]) {
      * Interpolate correct shade value distribution using barycentric coordinate system.
      * Later this value will be used as scalar value together with the actual triangle shade color.
      */
-    float px = (c[0].x / c[0].z) * a[0] + (c[1].x / c[1].z) * a[1] + (c[2].x / c[2].z) * a[2];
-    float py = (c[0].y / c[0].z) * a[0] + (c[1].y / c[1].z) * a[1] + (c[2].y / c[2].z) * a[2];
+    float px = (c[0].x / -c[0].z) * a[0] + (c[1].x / -c[1].z) * a[1] + (c[2].x / -c[2].z) * a[2];
+    float py = (c[0].y / -c[0].z) * a[0] + (c[1].y / -c[1].z) * a[1] + (c[2].y / -c[2].z) * a[2];
 
-    Vector3 invertedView = {px * z, py * z, -z };
+    Vector3 invertedView = {px * -z, py * -z, z };
 
     Vector3 line1 = subVec3(&c[0], &c[1]);
     Vector3 line2 = subVec3(&c[0], &c[2]);
