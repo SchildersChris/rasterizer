@@ -11,7 +11,7 @@
  * The nearest value for clipping the view frustum
  */
 #ifndef NEAR_CLIPPING
-    #define NEAR_CLIPPING 1
+    #define NEAR_CLIPPING .5
 #endif
 
 /**
