@@ -5,7 +5,6 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-#define NEAR_CLIPPING 1
 #include "src/include/rasterizer.h"
 
 void* openFile(const char* p_file_name, size_t* p_file_size)
@@ -61,12 +60,15 @@ int main() {
     int width = 2000;
     int height = 2000;
 
+    int size = width * height;
+
     // Allocate z-buffer on heap
-    float* zBuffer = malloc( width * height * sizeof(float));
+    float* zBuffer = malloc( size * sizeof(float));
 
     // Allocate raster image on heap
-    unsigned char* rasterImage = malloc(width * height * sizeof(unsigned char));
+    unsigned char* frameBuffer = malloc(size * sizeof(unsigned char));
 
+    // Define transformation matrix
     float angle = 0;
     Matrix4x4 modelViewProjection = {
         { cosf(angle), 0, sinf(angle), 0 },
@@ -76,9 +78,23 @@ int main() {
     };
 
     // Rasterize triangles
-    rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &modelViewProjection, zBuffer, rasterImage, width, height);
+    rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &modelViewProjection, zBuffer, frameBuffer, width, height);
+
+    // Convert zBuffer to image
+    unsigned char* zBufferImage = malloc(size * sizeof(unsigned char*));
+    for (int i = 0; i < size; ++i) {
+        zBufferImage[i] = (unsigned char)(zBuffer[i]);
+    }
 
     // Write out result
-    stbi_write_jpg("../output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));
+    stbi_write_jpg("../output.jpg", width, height, 1, frameBuffer, width * (int)sizeof(unsigned char));
+    stbi_write_jpg("../zBuffer.jpg", width, height, 1, zBufferImage, width * (int)sizeof(float));
+
+    // Free memory
+    free(frameBuffer);
+    free(zBufferImage);
+    free(zBuffer);
+    free(p_buffer);
+
     return 0;
 }
