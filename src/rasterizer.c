@@ -24,8 +24,8 @@
  */
 static Vector3 cameraToRaster(Vector3* v, unsigned int w, unsigned int h){
     return (Vector3) {
-        .x = (1 - NEAR_CLIPPING * v->x / (-v->z)) * 0.5f * (float)w,
-        .y = (1 - NEAR_CLIPPING * v->y / (-v->z)) * 0.5f * (float)h,
+        .x = (1 - NEAR_CLIPPING * v->x / (v->z)) * 0.5f * (float)w,
+        .y = (1 - NEAR_CLIPPING * v->y / (v->z)) * 0.5f * (float)h,
         .z = 1 / -v->z
     };
 }
