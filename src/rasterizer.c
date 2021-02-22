@@ -119,7 +119,7 @@ static void rasterizeTriangle(
              *
              * If it does not fall inside of the we continue looping through the box.
              */
-            if (a[0] >= 0 || a[1] >= 0 || a[2] >= 0)
+            if (a[0] < 0 || a[1] < 0 || a[2] < 0)
                 continue;
 
             // Interpolate bary centric coordinate area
