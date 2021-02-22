@@ -24,8 +24,8 @@
  */
 static Vector3 cameraToRaster(Vector3* v, unsigned int w, unsigned int h){
     return (Vector3) {
-        .x = (1 - NEAR_CLIPPING * v->x / (-v->z)) * 0.5f * (float)w,
-        .y = (1 - NEAR_CLIPPING * v->y / (-v->z)) * 0.5f * (float)h,
+        .x = (1 + NEAR_CLIPPING * v->x / -v->z) * 0.5f * (float)w,
+        .y = (1 - NEAR_CLIPPING * v->y / -v->z) * 0.5f * (float)h,
         .z = 1 / -v->z
     };
 }
@@ -44,19 +44,19 @@ static unsigned char getPixelShade(float z, Vector3 c[3], const float a[3]) {
      * Interpolate correct shade value distribution using barycentric coordinate system.
      * Later this value will be used as scalar value together with the actual triangle shade color.
      */
-    float px = (c[0].x / c[0].z) * a[0] + (c[1].x / c[1].z) * a[1] + (c[2].x / c[2].z) * a[2];
-    float py = (c[0].y / c[0].z) * a[0] + (c[1].y / c[1].z) * a[1] + (c[2].y / c[2].z) * a[2];
+    float px = (c[0].x / -c[0].z) * a[0] + (c[1].x / -c[1].z) * a[1] + (c[2].x / -c[2].z) * a[2];
+    float py = (c[0].y / -c[0].z) * a[0] + (c[1].y / -c[1].z) * a[1] + (c[2].y / -c[2].z) * a[2];
 
-    Vector3 invertedView = {px * z, py * z, -z };
+    Vector3 viewDirection = {px * -z, py * -z, z };
+    Vector3 nViewDirection = normalizeVec3(&viewDirection);
 
-    Vector3 line1 = subVec3(&c[0], &c[1]);
-    Vector3 line2 = subVec3(&c[0], &c[2]);
-    Vector3 cross = crossVec3(&line2, &line1);
+    Vector3 line1 = subVec3(&c[1], &c[0]);
+    Vector3 line2 = subVec3(&c[2], &c[2]);
+    Vector3 cross = crossVec3(&line1, &line2);
 
     Vector3 nCamera = normalizeVec3(&cross);
-    Vector3 nViewDirection = normalizeVec3(&invertedView);
 
-    return (unsigned char)(dotVec3(&nViewDirection, &nCamera) * 255);
+    return (unsigned char)(MAX(0, dotVec3(&nCamera, &nViewDirection)) * 255);
 }
 
 /**
@@ -104,7 +104,7 @@ static void rasterizeTriangle(
 
     for (int y = minY; y <= maxY; ++y) {
         for (int x = minX; x <= maxX; ++x) {
-            Vector3 p = { (float)x, (float)y, 0 };
+            Vector3 p = { (float)x + .5f, (float)y + .5f, 0 };
 
             // Area of each point in the triangle
             float a[3] = {
@@ -135,7 +135,7 @@ static void rasterizeTriangle(
              * Otherwise if the z component is overlapping the old value we store the new z component and compute the screen pixel
              */
             float z = 1 / (r[0].z * a[0] + r[1].z * a[1] + r[2].z * a[2]);
-            if (z >= zBuffer[y * rasterWidth + x])
+            if (z < zBuffer[y * rasterWidth + x])
                 continue;
 
             zBuffer[y * rasterWidth + x] = z;
