@@ -40,8 +40,8 @@ void* openFile(const char* p_file_name, size_t* p_file_size)
 int main() {
     // Cube vertices
     const Vector3 vertices[] =  {
-        {-0.5f, -0.5f, -0.5f},
-        {0.5f, -0.5f, -0.5f},
+        {-0.2f, -0.5f, -0.5f},
+        {0.2f, -0.5f, -0.5f},
         {-0.5f, 0.5f,-0.5f},
         {0.5f, 0.5f, -0.5f},
         {-0.5f, 0.5f, -1.5f},
