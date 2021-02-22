@@ -51,7 +51,7 @@ static unsigned char getPixelShade(float z, Vector3 c[3], const float a[3]) {
     Vector3 nViewDirection = normalizeVec3(&viewDirection);
 
     Vector3 line1 = subVec3(&c[1], &c[0]);
-    Vector3 line2 = subVec3(&c[2], &c[2]);
+    Vector3 line2 = subVec3(&c[2], &c[0]);
     Vector3 cross = crossVec3(&line1, &line2);
 
     Vector3 nCamera = normalizeVec3(&cross);

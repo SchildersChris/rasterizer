@@ -38,47 +38,25 @@ void* openFile(const char* p_file_name, size_t* p_file_size)
 }
 
 int main() {
-    // Cube vertices
-    const Vector3 vertices[] =  {
-        {-0.2f, -0.5f, -0.5f},
-        {0.2f, -0.5f, -0.5f},
-        {-0.5f, 0.5f,-0.5f},
-        {0.5f, 0.5f, -0.5f},
-        {-0.5f, 0.5f, -1.5f},
-        {0.5f, 0.5f, -1.5f},
-        {-0.5f, -0.5f, -1.5f},
-        {0.5f, -0.5f, -1.5f},
-    };
+    void* p_data;
+    void* p_buffer;
+    size_t file_size;
+    objpar_data_t obj_data;
 
-    // Cube triangle indices
-    const unsigned int indices[] = {
-        1, 2, 3,
-        3, 2, 4,
-        3, 4, 5,
-        5, 4, 6,
-        5, 6, 7,
-        7, 6, 8,
-        7, 8, 1,
-        1, 8, 2,
-        2, 8, 4,
-        4, 8, 6,
-        7, 1, 5,
-        5, 1, 3
-    };
-//
-//    void* p_data;
-//    void* p_buffer;
-//    size_t file_size;
-//    objpar_data_t obj_data;
-//
-//    p_data = openFile("../res/v2.obj", &file_size);
-//    p_buffer = malloc(objpar_get_size(p_data, file_size));
-//    objpar((const char*)p_data, file_size, p_buffer, &obj_data);
-//    free(p_data);
-//
-//    printf("Vertices Count: %u\n", obj_data.position_count);
-//    printf("Face Count: %u\n\n", obj_data.face_count);
-//
+    p_data = openFile("../res/v2.obj", &file_size);
+    p_buffer = malloc(objpar_get_size(p_data, file_size));
+    objpar((const char*)p_data, file_size, p_buffer, &obj_data);
+    free(p_data);
+
+    // Map indices to new format [VertexIndex, TextureIndex, NormalIndex] => [VertexIndex]
+    unsigned int* indices = malloc(obj_data.face_count * 3 * sizeof(unsigned int));
+    for (int i = 0, j = 0; j < obj_data.face_count * 3 * 3; i++, j+=3) {
+        indices[i] = obj_data.p_faces[j];
+    }
+
+    printf("Vertices Count: %u\n", obj_data.position_count);
+    printf("Face Count: %u\n", obj_data.face_count);
+
     // Raster image dimensions
     int width = 2000;
     int height = 2000;
@@ -89,17 +67,16 @@ int main() {
     // Allocate raster image on heap
     unsigned char* rasterImage = malloc(width * height * sizeof(unsigned char));
 
-    float angle = 0.1f;
+    float angle = 0.4f;
     Matrix4x4 transform = {
-        { cosf(angle), -sinf(angle), 0, 0 },
-        { sinf(angle), cosf(angle), 0, 0 },
-        { 0, 0, 1, 0 },
-        { 0, 0, 0, 1 }
+        { cosf(angle), 0, sinf(angle), 0 },
+        { 0, 1, 0, 0 },
+        { -sinf(angle), 0, cosf(angle), 0 },
+        { 0, 0, 10, 1 }
     };
 
-//    // Rasterize triangles
-//    rasterize((Vector3*)obj_data.p_positions, obj_data.p_faces, obj_data.face_count, &transform, zBuffer, width, height, rasterImage);
-    rasterize(vertices, indices, 12, &transform, zBuffer, width, height, rasterImage);
+    // Rasterize triangles
+    rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &transform, zBuffer, width, height, rasterImage);
 
     // Write out result
     stbi_write_jpg("../output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));
