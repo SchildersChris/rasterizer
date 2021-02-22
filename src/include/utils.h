@@ -6,11 +6,6 @@
 #define RASTERIZER_UTILS_H
 
 /**
- * Vector with x and y components
- */
-typedef struct { float x, y; } Vector2;
-
-/**
  * Vector with x, y and z components
  */
 typedef struct { float x, y, z; } Vector3;

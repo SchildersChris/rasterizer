@@ -4,8 +4,10 @@
 
 #include <math.h>
 #include <memory.h>
-#include <limits.h>
 #include "include/rasterizer.h"
+
+#define NEAR_CLIPPING 1
+#define FAR_CLIPPING 10000
 
 /**
  * This functions translates a camera coordinate to raster space.
@@ -34,9 +36,9 @@ static Vector3 cameraToRaster(Vector3* v, unsigned int w, unsigned int h){
  * This functions calculates the shade value of a point based on the angle of the triangle in relation to the camera
  * (using the cross product) and uses bary centric coordinates to get an interpolated color inside the triangle its self.
  *
- * @param z Z component of the pixel
- * @param c Camera positions of the triangle which is used to interpolate the correct value of the shade
- * @param a Area of all the triangle edges
+ * @param z Barycentric z component of the pixel
+ * @param c Triangle in camera space
+ * @param a Barycentric area of each triangle point
  * @return Returns a char which represents the shaded value.
  */
 static unsigned char getPixelShade(float z, Vector3 c[3], const float a[3]) {
@@ -60,25 +62,24 @@ static unsigned char getPixelShade(float z, Vector3 c[3], const float a[3]) {
 }
 
 /**
- * Rasterize a single triangle based and record it
- * into the raster image buffer
+ * Rasterize a single triangle and draw into the frameBuffer
  *
  * @param c Triangle in camera space
  * @param r Triangle in raster space
- * @param zBuffer Pointer to buffer which is used to store depth information of triangles
- * @param rasterWidth Width of the raster image
- * @param rasterHeight Height of the raster image
- * @param rasterImage Raster output image
+ * @param zBuffer Pointer to buffer which stores depth information of triangles
+ * @param frameBuffer Pointer to buffer which stores the raster image
+ * @param width Width of the image in pixels
+ * @param height Height of the image in pixels
  */
 static void rasterizeTriangle(
         Vector3 c[3],
         Vector3 r[3],
         float* zBuffer,
-        unsigned int rasterWidth,
-        unsigned int rasterHeight,
-        unsigned char* rasterImage) {
-    unsigned int w = rasterWidth - 1;
-    unsigned int h = rasterHeight - 1;
+        unsigned char* frameBuffer,
+        unsigned int width,
+        unsigned int height) {
+    unsigned int w = width - 1;
+    unsigned int h = height - 1;
 
     // Calculate triangle bounding box (based on triangle in raster space)
     float rMaxY = MAX3(r[0].y, r[1].y, r[2].y);
@@ -119,7 +120,7 @@ static void rasterizeTriangle(
              *
              * If it does not fall inside of the we continue looping through the box.
              */
-            if (a[0] >= 0 || a[1] >= 0 || a[2] >= 0)
+            if (a[0] < 0 || a[1] < 0 || a[2] < 0)
                 continue;
 
             // Interpolate bary centric coordinate area
@@ -135,11 +136,11 @@ static void rasterizeTriangle(
              * Otherwise if the z component is overlapping the old value we store the new z component and compute the screen pixel
              */
             float z = 1 / (r[0].z * a[0] + r[1].z * a[1] + r[2].z * a[2]);
-            if (z < zBuffer[y * rasterWidth + x])
+            if (z >= zBuffer[y * width + x])
                 continue;
 
-            zBuffer[y * rasterWidth + x] = z;
-            rasterImage[y * rasterWidth + x] = getPixelShade(z, c, a);
+            zBuffer[y * width + x] = z;
+            frameBuffer[y * width + x] = getPixelShade(z, c, a);
         }
     }
 }
@@ -147,30 +148,30 @@ static void rasterizeTriangle(
 void rasterize(
         const Vector3* vertices,
         const unsigned int* indices,
-        unsigned int numIndices,
-        const Matrix4x4* transform,
+        unsigned int indicesCount,
+        const Matrix4x4* modelViewProjection,
         float* zBuffer,
-        unsigned int rasterWidth,
-        unsigned int rasterHeight,
-        unsigned char* rasterImage) {
+        unsigned char* frameBuffer,
+        unsigned int width,
+        unsigned int height) {
 
-    unsigned int size = rasterWidth * rasterHeight;
-    memset(rasterImage, 0, size * sizeof(unsigned char));
-    memset(zBuffer, CHAR_MAX, size * sizeof(float));
+    unsigned int size = width * height;
+    memset(frameBuffer, 0, size * sizeof(unsigned char));
+    for (int i = 0; i < size; ++i) { zBuffer[i] = FAR_CLIPPING; }
 
-    for (int i = 0; i < numIndices; i+=3) {
+    for (int i = 0; i < indicesCount; i+=3) {
         Vector3 c[3] = {
-            transformVec3(vertices + (indices[i]-1), transform),
-            transformVec3(vertices + (indices[i+1]-1), transform),
-            transformVec3(vertices + (indices[i+2]-1), transform)
+            transformVec3(vertices + (indices[i]-1), modelViewProjection),
+            transformVec3(vertices + (indices[i+1]-1), modelViewProjection),
+            transformVec3(vertices + (indices[i+2]-1), modelViewProjection)
         };
 
         Vector3 r[3] = {
-            cameraToRaster(&c[0], rasterWidth, rasterHeight),
-            cameraToRaster(&c[1], rasterWidth, rasterHeight),
-            cameraToRaster(&c[2], rasterWidth, rasterHeight)
+            cameraToRaster(&c[0], width, height),
+            cameraToRaster(&c[1], width, height),
+            cameraToRaster(&c[2], width, height)
         };
 
-        rasterizeTriangle(c, r, zBuffer, rasterWidth, rasterHeight, rasterImage);
+        rasterizeTriangle(c, r, zBuffer, frameBuffer, width, height);
     }
 }

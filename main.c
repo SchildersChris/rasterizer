@@ -67,16 +67,16 @@ int main() {
     // Allocate raster image on heap
     unsigned char* rasterImage = malloc(width * height * sizeof(unsigned char));
 
-    float angle = 0.4f;
-    Matrix4x4 transform = {
+    float angle = 0;
+    Matrix4x4 modelViewProjection = {
         { cosf(angle), 0, sinf(angle), 0 },
         { 0, 1, 0, 0 },
         { -sinf(angle), 0, cosf(angle), 0 },
-        { 0, 0, 10, 1 }
+        { 0, 0, 0, 1 }
     };
 
     // Rasterize triangles
-    rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &transform, zBuffer, width, height, rasterImage);
+    rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &modelViewProjection, zBuffer, rasterImage, width, height);
 
     // Write out result
     stbi_write_jpg("../output.jpg", width, height, 1, rasterImage, width * (int)sizeof(unsigned char));
