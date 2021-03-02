@@ -77,7 +77,7 @@ int main() {
         { 0, 0, 0, 1 }
     };
 
-    unsigned char backgroundColor = 150;
+    unsigned char backgroundColor = 0;
 
     // Rasterize triangles
     rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &modelViewProjection, zBuffer, frameBuffer, backgroundColor, width, height);
