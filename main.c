@@ -5,7 +5,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-#include "src/rasterizer.h"
+#include "src/include/rasterizer.h"
 
 void* openFile(const char* p_file_name, size_t* p_file_size)
 {
