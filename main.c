@@ -5,7 +5,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 
-#include "src/include/rasterizer.h"
+#include "src/rasterizer.h"
 
 void* openFile(const char* p_file_name, size_t* p_file_size)
 {
@@ -42,7 +42,7 @@ int main() {
     size_t file_size;
     objpar_data_t obj_data;
 
-    p_data = openFile("../res/v2.obj", &file_size);
+    p_data = openFile("../res/vector.obj", &file_size);
     p_buffer = malloc(objpar_get_size(p_data, file_size));
     objpar((const char*)p_data, file_size, p_buffer, &obj_data);
     free(p_data);
