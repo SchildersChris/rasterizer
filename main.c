@@ -57,8 +57,8 @@ int main() {
     printf("Face Count: %u\n", obj_data.face_count);
 
     // Raster image dimensions
-    int width = 926;
-    int height = 428;
+    int width = 1920;
+    int height = 1080;
 
     int size = width * height;
 
