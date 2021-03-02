@@ -7,9 +7,6 @@
 #include <stdlib.h>
 #include "include/rasterizer.h"
 
-#define NEAR_CLIPPING 1
-#define FAR_CLIPPING 10000
-
 /**
  * This functions translates a camera coordinate to raster space.
  *
@@ -166,7 +163,7 @@ void rasterize(
     float wF = (float)width;
     float hF = (float)height;
 
-    float deviceAspect = ASPECT_WIDTH / ASPECT_HEIGHT;
+    float deviceAspect = DEVICE_ASPECT;
     float frameAspect = wF / hF;
 
     float wAspect = 1;

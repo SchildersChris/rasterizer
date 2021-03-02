@@ -5,15 +5,19 @@
 #ifndef RASTERIZER_RASTERIZER_H
 #define RASTERIZER_RASTERIZER_H
 
-#ifndef ASPECT_WIDTH
-    #define ASPECT_WIDTH 1.f
-#endif
-
-#ifndef ASPECT_HEIGHT
-    #define ASPECT_HEIGHT 1.f
-#endif
-
 #include "utils.h"
+
+#ifndef DEVICE_ASPECT
+    #define DEVICE_ASPECT 1.f / 1.f
+#endif
+
+#ifndef NEAR_CLIPPING
+    #define NEAR_CLIPPING 1
+#endif
+
+#ifndef FAR_CLIPPING
+    #define FAR_CLIPPING 10000
+#endif
 
 /**
  * Rasterize a list of triangles to a grayscale image
