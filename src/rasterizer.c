@@ -162,9 +162,18 @@ void rasterize(
     memset(frameBuffer, backgroundColor, size * sizeof(unsigned char));
     for (int i = 0; i < size; ++i) { zBuffer[i] = FAR_CLIPPING; }
 
-    // Normalize aspect ratio (overscan mode)
+    float deviceAspect = ASPECT_WIDTH / ASPECT_HEIGHT;
+    float frameAspect = (float)width / (float)height;
+
     float wAspect = (float)width;
-    float hAspect = (float)height * (float)width / (float)height;
+    float hAspect = (float)height;
+
+    if (deviceAspect > frameAspect) {
+        hAspect *= frameAspect / deviceAspect;
+    }
+    else {
+        wAspect *= deviceAspect / frameAspect;
+    }
 
     for (int i = 0; i < indicesCount; i+=3) {
         Vector3 c[3] = {

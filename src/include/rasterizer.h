@@ -5,6 +5,14 @@
 #ifndef RASTERIZER_RASTERIZER_H
 #define RASTERIZER_RASTERIZER_H
 
+#ifndef ASPECT_WIDTH
+    #define ASPECT_WIDTH 1.f
+#endif
+
+#ifndef ASPECT_HEIGHT
+    #define ASPECT_HEIGHT 1.f
+#endif
+
 #include "utils.h"
 
 /**
