@@ -24,10 +24,10 @@
  * @return Returns a vector3 defined in raster space coordinate. The actual coordinate is a Vector2 but the inverted z component is added
  *         to later be used in rasterisation depth.
  */
-static Vector3 cameraToRaster(Vector3* v, float wAspect, float hAspect){
+static Vector3 cameraToRaster(Vector3* v, float width, float height, float wAspect, float hAspect){
     return (Vector3) {
-        .x = (1 + NEAR_CLIPPING * v->x / -v->z) * 0.5f * wAspect,
-        .y = (1 - NEAR_CLIPPING * v->y / -v->z) * 0.5f * hAspect,
+        .x = (1 + NEAR_CLIPPING * (v->x * wAspect) / -v->z) * 0.5f * width,
+        .y = (1 - NEAR_CLIPPING * (v->y * hAspect) / -v->z) * 0.5f * height,
         .z = 1 / -v->z
     };
 }
@@ -162,11 +162,14 @@ void rasterize(
     memset(frameBuffer, backgroundColor, size * sizeof(unsigned char));
     for (int i = 0; i < size; ++i) { zBuffer[i] = FAR_CLIPPING; }
 
-    float deviceAspect = ASPECT_WIDTH / ASPECT_HEIGHT;
-    float frameAspect = (float)width / (float)height;
+    float wF = (float)width;
+    float hF = (float)height;
 
-    float wAspect = (float)width;
-    float hAspect = (float)height;
+    float deviceAspect = ASPECT_WIDTH / ASPECT_HEIGHT;
+    float frameAspect = wF / hF;
+
+    float wAspect = 1;
+    float hAspect = 1;
 
     if (deviceAspect > frameAspect) {
         hAspect *= frameAspect / deviceAspect;
@@ -183,9 +186,9 @@ void rasterize(
         };
 
         Vector3 r[3] = {
-            cameraToRaster(&c[0], wAspect, hAspect),
-            cameraToRaster(&c[1], wAspect, hAspect),
-            cameraToRaster(&c[2], wAspect, hAspect)
+            cameraToRaster(&c[0], wF, hF, wAspect, hAspect),
+            cameraToRaster(&c[1], wF, hF, wAspect, hAspect),
+            cameraToRaster(&c[2], wF, hF, wAspect, hAspect)
         };
 
         rasterizeTriangle(c, r, zBuffer, frameBuffer, backgroundColor, width, height);
