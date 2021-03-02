@@ -69,12 +69,12 @@ int main() {
     unsigned char* frameBuffer = malloc(size * sizeof(unsigned char));
 
     // Define transformation matrix
-    float angle = 0;
+    float angle = .8f;
     Matrix4x4 modelViewProjection = {
         { cosf(angle), 0, sinf(angle), 0 },
         { 0, 1, 0, 0 },
         { -sinf(angle), 0, cosf(angle), 0 },
-        { 0, 0, 1, 1 }
+        { 0, -.5f, -4, 1 }
     };
 
     unsigned char backgroundColor = 0;
@@ -85,7 +85,8 @@ int main() {
     // Convert zBuffer to image
     unsigned char* zBufferImage = malloc(size * sizeof(unsigned char*));
     for (int i = 0; i < size; ++i) {
-        zBufferImage[i] = (unsigned char)(zBuffer[i] / FAR_CLIPPING * 255);
+        if (zBuffer[i] != FAR_CLIPPING)
+            zBufferImage[i] = MAX(zBuffer[i] * 255, 255);
     }
 
     stbi_write_jpg("../output.jpg", width, height, 1, frameBuffer, width * (int)sizeof(unsigned char));

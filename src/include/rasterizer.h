@@ -16,7 +16,7 @@
 #endif
 
 #ifndef FAR_CLIPPING
-    #define FAR_CLIPPING 10
+    #define FAR_CLIPPING 100
 #endif
 
 /**
