@@ -2,7 +2,7 @@
 # src module
 # -----------------------------------------------------------------------------
 
-add_library(rasterizer STATIC
+add_library(rasterizer
         rasterizer.c
         include/rasterizer.h
         utils.c
@@ -10,4 +10,3 @@ add_library(rasterizer STATIC
 
 # Linking <math.h> library
 target_link_libraries(rasterizer m)
-target_include_directories(rasterizer PUBLIC include)
