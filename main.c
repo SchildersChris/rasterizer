@@ -74,7 +74,7 @@ int main() {
         { cosf(angle), 0, sinf(angle), 0 },
         { 0, 1, 0, 0 },
         { -sinf(angle), 0, cosf(angle), 0 },
-        { 0, 0, 0, 1 }
+        { 0, 0, 1, 1 }
     };
 
     unsigned char backgroundColor = 0;
@@ -85,7 +85,7 @@ int main() {
     // Convert zBuffer to image
     unsigned char* zBufferImage = malloc(size * sizeof(unsigned char*));
     for (int i = 0; i < size; ++i) {
-        zBufferImage[i] = (unsigned char)(zBuffer[i]);
+        zBufferImage[i] = (unsigned char)(zBuffer[i] / FAR_CLIPPING * 255);
     }
 
     stbi_write_jpg("../output.jpg", width, height, 1, frameBuffer, width * (int)sizeof(unsigned char));
