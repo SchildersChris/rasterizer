@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <memory.h>
+#include <stdlib.h>
 #include "include/rasterizer.h"
 
 #define NEAR_CLIPPING 1
@@ -142,7 +143,7 @@ static void rasterizeTriangle(
                 continue;
 
             zBuffer[y * width + x] = z;
-            frameBuffer[y * width + x] = backgroundColor - getPixelShade(z, c, a);
+            frameBuffer[y * width + x] = abs(backgroundColor - getPixelShade(z, c, a));
         }
     }
 }

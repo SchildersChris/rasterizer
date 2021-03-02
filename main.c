@@ -77,8 +77,10 @@ int main() {
         { 0, 0, 0, 1 }
     };
 
+    char backgroundColor = 0;
+
     // Rasterize triangles
-    rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &modelViewProjection, zBuffer, frameBuffer, 255, width, height);
+    rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &modelViewProjection, zBuffer, frameBuffer, backgroundColor, width, height);
 
     // Convert zBuffer to image
     unsigned char* zBufferImage = malloc(size * sizeof(unsigned char*));
