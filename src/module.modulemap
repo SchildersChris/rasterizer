@@ -1,5 +1,5 @@
 module Rasterizer {
-    header "rasterizer.h"
+    header "include/rasterizer.h"
     link "Rasterizer"
     export *
 }
