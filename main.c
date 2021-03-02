@@ -69,12 +69,12 @@ int main() {
     unsigned char* frameBuffer = malloc(size * sizeof(unsigned char));
 
     // Define transformation matrix
-    float angle = .8f;
+    float angle = .5f;
     Matrix4x4 modelViewProjection = {
         { cosf(angle), 0, sinf(angle), 0 },
         { 0, 1, 0, 0 },
         { -sinf(angle), 0, cosf(angle), 0 },
-        { 0, -.5f, -4, 1 }
+        { 0, -.6f, -4, 1 }
     };
 
     unsigned char backgroundColor = 0;
