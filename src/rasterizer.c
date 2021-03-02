@@ -19,15 +19,15 @@
  * Todo: Use aspect ratio and field of view to calculate a more accurate representation.
  *
  * @param v Camera vector
- * @param w Width in pixels of the screen
- * @param h Height in pixels of the screen
+ * @param wAspect Corrected width aspect in pixels of the screen
+ * @param hAspect Corrected height aspect in pixels of the screen
  * @return Returns a vector3 defined in raster space coordinate. The actual coordinate is a Vector2 but the inverted z component is added
  *         to later be used in rasterisation depth.
  */
-static Vector3 cameraToRaster(Vector3* v, unsigned int w, unsigned int h){
+static Vector3 cameraToRaster(Vector3* v, float wAspect, float hAspect){
     return (Vector3) {
-        .x = (1 + NEAR_CLIPPING * v->x / -v->z) * 0.5f * (float)w,
-        .y = (1 - NEAR_CLIPPING * v->y / -v->z) * 0.5f * (float)h,
+        .x = (1 + NEAR_CLIPPING * v->x / -v->z) * 0.5f * wAspect,
+        .y = (1 - NEAR_CLIPPING * v->y / -v->z) * 0.5f * hAspect,
         .z = 1 / -v->z
     };
 }
@@ -162,6 +162,10 @@ void rasterize(
     memset(frameBuffer, backgroundColor, size * sizeof(unsigned char));
     for (int i = 0; i < size; ++i) { zBuffer[i] = FAR_CLIPPING; }
 
+    // Normalize aspect ratio (overscan mode)
+    float wAspect = (float)width;
+    float hAspect = (float)height * (float)width / (float)height;
+
     for (int i = 0; i < indicesCount; i+=3) {
         Vector3 c[3] = {
             transformVec3(vertices + (indices[i]-1), modelViewProjection),
@@ -170,9 +174,9 @@ void rasterize(
         };
 
         Vector3 r[3] = {
-            cameraToRaster(&c[0], width, height),
-            cameraToRaster(&c[1], width, height),
-            cameraToRaster(&c[2], width, height)
+            cameraToRaster(&c[0], wAspect, hAspect),
+            cameraToRaster(&c[1], wAspect, hAspect),
+            cameraToRaster(&c[2], wAspect, hAspect)
         };
 
         rasterizeTriangle(c, r, zBuffer, frameBuffer, backgroundColor, width, height);
