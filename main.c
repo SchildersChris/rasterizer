@@ -47,7 +47,7 @@ int main() {
     objpar((const char*)p_data, file_size, p_buffer, &obj_data);
     free(p_data);
 
-    // Map indices to new format [VertexIndex, TextureIndex, NormalIndex] => [VertexIndex]
+    // Map indices to new format, from [VertexIndex, TextureIndex, NormalIndex] => [VertexIndex]
     unsigned int* indices = malloc(obj_data.face_count * 3 * sizeof(unsigned int));
     for (int i = 0, j = 0; j < obj_data.face_count * 3 * 3; i++, j+=3) {
         indices[i] = obj_data.p_faces[j];
@@ -63,7 +63,7 @@ int main() {
     int size = width * height;
 
     // Allocate z-buffer on heap
-    float* zBuffer = malloc( size * sizeof(float));
+    float* zBuffer = malloc(size * sizeof(float));
 
     // Allocate raster image on heap
     unsigned char* frameBuffer = malloc(size * sizeof(unsigned char));
@@ -88,15 +88,12 @@ int main() {
         zBufferImage[i] = (unsigned char)(zBuffer[i]);
     }
 
-    // Write out result
     stbi_write_jpg("../output.jpg", width, height, 1, frameBuffer, width * (int)sizeof(unsigned char));
     stbi_write_jpg("../zBuffer.jpg", width, height, 1, zBufferImage, width * (int)sizeof(float));
 
-    // Free memory
     free(frameBuffer);
     free(zBufferImage);
     free(zBuffer);
     free(p_buffer);
-
     return 0;
 }
