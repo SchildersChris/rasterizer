@@ -17,11 +17,11 @@
  * We need to map the coordinate to there respective raster coordinate which is
  * defined by the width and height of the screen pixels.
  *
- * Todo: Use aspect ratio and field of view to calculate a more accurate representation.
- *
  * @param v Camera vector
- * @param wAspect Corrected width aspect in pixels of the screen
- * @param hAspect Corrected height aspect in pixels of the screen
+ * @param width Width in pixels of the screen
+ * @param height Height in pixels of the screen
+ * @param wAspect Corrected scale x
+ * @param hAspect Corrected scale y
  * @return Returns a vector3 defined in raster space coordinate. The actual coordinate is a Vector2 but the inverted z component is added
  *         to later be used in rasterisation depth.
  */
