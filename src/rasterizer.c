@@ -68,6 +68,7 @@ static unsigned char getPixelShade(float z, Vector3 c[3], const float a[3]) {
  * @param r Triangle in raster space
  * @param zBuffer Pointer to buffer which stores depth information of triangles
  * @param frameBuffer Pointer to buffer which stores the raster image
+ * @param backgroundColor Background color of the framebuffer
  * @param width Width of the image in pixels
  * @param height Height of the image in pixels
  */
@@ -76,6 +77,7 @@ static void rasterizeTriangle(
         Vector3 r[3],
         float* zBuffer,
         unsigned char* frameBuffer,
+        unsigned char backgroundColor,
         unsigned int width,
         unsigned int height) {
     unsigned int w = width - 1;
@@ -140,7 +142,7 @@ static void rasterizeTriangle(
                 continue;
 
             zBuffer[y * width + x] = z;
-            frameBuffer[y * width + x] = getPixelShade(z, c, a);
+            frameBuffer[y * width + x] = backgroundColor - getPixelShade(z, c, a);
         }
     }
 }
@@ -152,11 +154,12 @@ void rasterize(
         const Matrix4x4* modelViewProjection,
         float* zBuffer,
         unsigned char* frameBuffer,
+        unsigned char backgroundColor,
         unsigned int width,
         unsigned int height) {
 
     unsigned int size = width * height;
-    memset(frameBuffer, 0, size * sizeof(unsigned char));
+    memset(frameBuffer, backgroundColor, size * sizeof(unsigned char));
     for (int i = 0; i < size; ++i) { zBuffer[i] = FAR_CLIPPING; }
 
     for (int i = 0; i < indicesCount; i+=3) {
@@ -172,6 +175,6 @@ void rasterize(
             cameraToRaster(&c[2], width, height)
         };
 
-        rasterizeTriangle(c, r, zBuffer, frameBuffer, width, height);
+        rasterizeTriangle(c, r, zBuffer, frameBuffer, backgroundColor, width, height);
     }
 }

@@ -44,6 +44,7 @@
  * @param modelViewProjection Matrix which stores the transformation for each vertex in the scene
  * @param zBuffer Pointer to buffer which stores depth information of triangles
  * @param frameBuffer Pointer to buffer which stores the raster image
+ * @param backgroundColor Background color of the framebuffer
  * @param width Width of the image in pixels
  * @param height Height of the image in pixels
  */
@@ -54,6 +55,7 @@ void rasterize(
         const Matrix4x4* modelViewProjection,
         float* zBuffer,
         unsigned char* frameBuffer,
+        unsigned char backgroundColor,
         unsigned int width,
         unsigned int height);
 
