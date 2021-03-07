@@ -83,7 +83,9 @@ int main() {
     rasterize((Vector3*)obj_data.p_positions, indices, obj_data.face_count * 3, &modelViewProjection, zBuffer, frameBuffer, backgroundColor, width, height);
 
     // Convert zBuffer to image
-    unsigned char* zBufferImage = malloc(size * sizeof(unsigned char*));
+    unsigned char* zBufferImage = malloc(size * sizeof(unsigned char));
+    memset(zBufferImage, 0, size * sizeof(unsigned char));
+
     for (int i = 0; i < size; ++i) {
         if (zBuffer[i] != FAR_CLIPPING)
             zBufferImage[i] = MAX(zBuffer[i] * 255, 255);
