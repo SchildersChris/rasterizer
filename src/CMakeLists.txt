@@ -8,5 +8,7 @@ add_library(rasterizer
         utils.c
         include/utils.h)
 
-# Linking <math.h> library
-target_link_libraries(rasterizer m)
+IF (NOT WIN32)
+    # Linking <math.h> library
+    target_link_libraries(rasterizer m)
+ENDIF()
