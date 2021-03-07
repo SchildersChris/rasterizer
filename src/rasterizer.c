@@ -105,7 +105,7 @@ static void rasterizeTriangle(
 
     for (int y = minY; y <= maxY; ++y) {
         for (int x = minX; x <= maxX; ++x) {
-            Vector3 p = { (float)x + .5f, (float)y + .5f, 0 };
+            Vector3 p = { (float)x, (float)y, 0 };
 
             // Area of each point in the triangle
             float a[3] = {
