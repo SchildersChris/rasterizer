@@ -160,11 +160,11 @@ void rasterize(
     memset(frameBuffer, backgroundColor, size * sizeof(unsigned char));
     for (int i = 0; i < size; ++i) { zBuffer[i] = FAR_CLIPPING; }
 
-    float wF = (float)width;
-    float hF = (float)height;
+    float fW = (float)width;
+    float fH = (float)height;
 
     float deviceAspect = DEVICE_ASPECT;
-    float frameAspect = wF / hF;
+    float frameAspect = fW / fH;
 
     float wAspect = 1;
     float hAspect = 1;
@@ -184,9 +184,9 @@ void rasterize(
         };
 
         Vector3 r[3] = {
-            cameraToRaster(&c[0], wF, hF, wAspect, hAspect),
-            cameraToRaster(&c[1], wF, hF, wAspect, hAspect),
-            cameraToRaster(&c[2], wF, hF, wAspect, hAspect)
+            cameraToRaster(&c[0], fW, fH, wAspect, hAspect),
+            cameraToRaster(&c[1], fW, fH, wAspect, hAspect),
+            cameraToRaster(&c[2], fW, fH, wAspect, hAspect)
         };
 
         rasterizeTriangle(c, r, zBuffer, frameBuffer, backgroundColor, width, height);
