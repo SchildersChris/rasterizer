@@ -47,7 +47,7 @@ float edgeFunction(const Vector3* v1, const Vector3* v2, const Vector3* p) {
     return (p->x - v1->x) * (v2->y - v1->y) - (p->y - v1->y) * (v2->x - v1->x);
 }
 
-Vector3 transformVec3(const Vector3 *v, const Matrix4x4 *mat) {
+Vector3 transformVec3(const Vector3* v, const Matrix4x4* mat) {
     return (Vector3) {
         .x = mat->p1.x * v->x + mat->p2.x * v->y + mat->p3.x * v->z + mat->p4.x,
         .y = mat->p1.y * v->x + mat->p2.y * v->y + mat->p3.y * v->z + mat->p4.y,
